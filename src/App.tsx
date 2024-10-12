@@ -26,14 +26,18 @@ export const updateResult = (result: string): string => {
 
 export const analyzeGames = (games: Game[]) => {
 	const liveGames = games.reduce((acc: Game[], game: Game) => {
-		return [
-			...acc,
-			{
-				...game,
-				result: updateResult(game.result),
-				timeLeft: game.timeLeft - 1
-			}
-		]
+		if (game.timeLeft > 0) {
+			return [
+				...acc,
+				{
+					...game,
+					result: updateResult(game.result),
+					timeLeft: game.timeLeft - 1
+				}
+			]
+		}
+
+		return acc
 	}, [])
 
 	return liveGames

@@ -19,6 +19,24 @@ describe('analyzeGames', () => {
 		expect(firstGame.timeLeft).toEqual(4)
 		expect(lastGame.timeLeft).toEqual(2)
 	})
+
+	test('should remove game if time left is 0', () => {
+		const games = [
+			{
+				id: 'test-id',
+				teamA: 'A',
+				teamB: 'B',
+				result: '1-0',
+				timeLeft: 5
+			},
+			{ id: 'test-id', teamA: 'C', teamB: 'D', result: '2-2', timeLeft: 0 }
+		]
+
+		const [firstGame, lastGame] = analyzeGames(games)
+
+		expect(firstGame).toBeDefined()
+		expect(lastGame).toBeUndefined()
+	})
 })
 
 describe('updateResult', () => {
