@@ -7,6 +7,16 @@ import { Games } from './Games'
 import { Summary } from './Summary'
 import { v4 as uuidv4 } from 'uuid'
 
+const GAME_DEFAULT_TIME = 60
+
+export const getNewGame = () => ({
+	result: '0-0',
+	timeLeft: GAME_DEFAULT_TIME,
+	teamA: 'Serbia',
+	teamB: 'Italy',
+	id: uuidv4()
+})
+
 export const updateResult = (result: string): string => {
 	let [teamA, teamB] = result.split('-').map(Number)
 
@@ -40,6 +50,11 @@ export const analyzeGames = (games: Game[]) => {
 		return acc
 	}, [])
 
+	if (Math.random() > 0.9) {
+		const newGame = getNewGame()
+		liveGames.push(newGame)
+	}
+
 	return liveGames
 }
 
@@ -58,29 +73,7 @@ export const App = () => {
 			result: '1-0'
 		}
 	])
-	const [games, setGames] = useState([
-		{
-			id: uuidv4(),
-			teamA: 'France',
-			teamB: 'Sweden',
-			result: '1-1',
-			timeLeft: 40
-		},
-		{
-			id: uuidv4(),
-			teamA: 'Spain',
-			teamB: 'Norway',
-			result: '1-1',
-			timeLeft: 40
-		},
-		{
-			id: uuidv4(),
-			teamA: 'Poland',
-			teamB: 'Germany',
-			result: '1-1',
-			timeLeft: 40
-		}
-	])
+	const [games, setGames] = useState<Game[]>([])
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {

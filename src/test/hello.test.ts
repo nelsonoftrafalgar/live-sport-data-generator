@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { analyzeGames, updateResult } from '../App'
+import { analyzeGames, getNewGame, updateResult } from '../App'
 
 describe('analyzeGames', () => {
 	test('should update time left for each game in progress', () => {
@@ -37,6 +37,58 @@ describe('analyzeGames', () => {
 		expect(firstGame).toBeDefined()
 		expect(lastGame).toBeUndefined()
 	})
+
+	test('should add a new game if Math.random > 0.9', () => {
+		const games = [
+			{
+				id: 'test-id',
+				teamA: 'TeamA',
+				teamB: 'TeamB',
+				result: '1-0',
+				timeLeft: 5
+			}
+		]
+
+		vi
+			.spyOn(Math, 'random')
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(0.95)
+
+		const updatedGames = analyzeGames(games)
+
+		expect(Object.keys(updatedGames)).toHaveLength(2)
+	})
+
+	test('should not add a new game if Math.random <= 0.9', () => {
+		const games = [
+			{
+				id: 'test-id',
+				teamA: 'TeamA',
+				teamB: 'TeamB',
+				result: '1-0',
+				timeLeft: 5
+			}
+		]
+
+		vi
+			.spyOn(Math, 'random')
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(0.85)
+
+		const updatedGames = analyzeGames(games)
+
+		expect(updatedGames).toEqual([
+			{
+				id: 'test-id',
+				teamA: 'TeamA',
+				teamB: 'TeamB',
+				result: '1-1',
+				timeLeft: 4
+			}
+		])
+	})
 })
 
 describe('updateResult', () => {
@@ -63,5 +115,18 @@ describe('updateResult', () => {
 
 	afterEach(() => {
 		vi.restoreAllMocks()
+	})
+})
+
+describe('getNewGame', () => {
+	test('should return a new game with initial result set to 0-0', () => {
+		const newGame = getNewGame()
+
+		expect(newGame.result).toBe('0-0')
+	})
+	test('should return a new game with initial timeLeft set to 60', () => {
+		const newGame = getNewGame()
+
+		expect(newGame.timeLeft).toEqual(60)
 	})
 })

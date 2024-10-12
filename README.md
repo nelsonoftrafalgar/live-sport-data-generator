@@ -1,4 +1,7 @@
 LIVE DATA GENERATOR
+set initial score to 0-0
+game lasts for 60 seconds 
+randomly insert new game into state 
 
 LIVE DATA UPDATE
 decrease timeLeft each 1 second
