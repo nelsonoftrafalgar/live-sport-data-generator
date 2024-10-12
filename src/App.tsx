@@ -7,12 +7,30 @@ import { Games } from './Games'
 import { Summary } from './Summary'
 import { v4 as uuidv4 } from 'uuid'
 
+export const updateResult = (result: string): string => {
+	let [teamA, teamB] = result.split('-').map(Number)
+
+	const updateTeamA = Math.random() < 0.5
+	const isUpdate = Math.random() > 0.9
+
+	if (isUpdate) {
+		if (updateTeamA) {
+			teamA += 1
+		} else {
+			teamB += 1
+		}
+	}
+
+	return `${teamA}-${teamB}`
+}
+
 export const analyzeGames = (games: Game[]) => {
 	const liveGames = games.reduce((acc: Game[], game: Game) => {
 		return [
 			...acc,
 			{
 				...game,
+				result: updateResult(game.result),
 				timeLeft: game.timeLeft - 1
 			}
 		]
