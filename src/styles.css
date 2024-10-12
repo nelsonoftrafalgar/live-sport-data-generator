@@ -1,0 +1,20 @@
+.wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+.table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 500px;
+}
+  
+.data, .header {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+  
+.row:nth-child(even) {
+    background-color: #dddddd;
+}
