@@ -1,3 +1,6 @@
 LIVE DATA GENERATOR
+
 LIVE DATA UPDATE
+decrease timeLeft each 1 second
+
 SUMMARY BOARD
