@@ -5,9 +5,11 @@ import {
 	getGameCountries,
 	getNewGame,
 	pickTwoCountries,
-	updateResult
+	updateResult,
+	updateSummary
 } from '../utils'
 
+import { Summary } from '../types'
 import { europeanCountries } from '../countries'
 
 describe('analyzeGames', () => {
@@ -211,5 +213,28 @@ describe('excludePlayingCountries', () => {
 		const availableCountries = excludePlayingCountries(playingCountries)
 		expect(availableCountries.includes(playingCountries[0])).toBe(false)
 		expect(availableCountries.includes(playingCountries[1])).toBe(false)
+	})
+})
+
+describe('updateSummary', () => {
+	test('should add finished game to the summary', () => {
+		const finishedGame = {
+			id: 'test-id',
+			teamA: 'TeamA',
+			teamB: 'TeamB',
+			result: '2-1',
+			timeLeft: 0
+		}
+
+		const summary: Summary[] = []
+		const updatedSummary = updateSummary(finishedGame)(summary)
+
+		expect(updatedSummary).toHaveLength(1)
+		expect(updatedSummary[0]).toEqual({
+			id: 'test-id',
+			teamA: 'TeamA',
+			teamB: 'TeamB',
+			result: '2-1'
+		})
 	})
 })

@@ -1,4 +1,4 @@
-import { Game, LiveGames } from './types'
+import { Game, LiveGames, Summary } from './types'
 
 import { europeanCountries } from './countries'
 import { v4 as uuidv4 } from 'uuid'
@@ -73,4 +73,11 @@ export const analyzeGames = (games: Game[]) => {
 	}
 
 	return liveGames
+}
+
+export const updateSummary = (finishedGame: Game) => (summary: Summary[]) => {
+	const { teamA, teamB, result, id } = finishedGame
+	const newItem = { id, teamA, teamB, result }
+
+	return [...summary, newItem]
 }

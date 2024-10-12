@@ -12,3 +12,4 @@ randomly update result each 1 second
 remove and return game after its time is over
 
 SUMMARY BOARD
+add summary item based on finished game
