@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import {
 	analyzeGames,
+	excludePlayingCountries,
+	getGameCountries,
 	getNewGame,
 	pickTwoCountries,
 	updateResult
@@ -28,6 +30,11 @@ describe('analyzeGames', () => {
 	})
 
 	test('should remove game if time left is 0', () => {
+		vi
+			.spyOn(Math, 'random')
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(1)
+			.mockReturnValueOnce(0.8)
 		const games = [
 			{
 				id: 'test-id',
@@ -146,5 +153,41 @@ describe('pickTwoCountries', () => {
 		expect(secondCountry).toBeDefined()
 
 		expect(firstCountry).not.toEqual(secondCountry)
+	})
+})
+
+describe('getGameCountries', () => {
+	test('should return an array of countries involved in the games', () => {
+		const games = [
+			{
+				id: 'test-id',
+				teamA: 'France',
+				teamB: 'Germany',
+				result: '2-1',
+				timeLeft: 45
+			},
+			{
+				id: 'test-id',
+				teamA: 'Italy',
+				teamB: 'Spain',
+				result: '0-3',
+				timeLeft: 15
+			}
+		]
+		expect(getGameCountries(games)).toEqual([
+			'France',
+			'Germany',
+			'Italy',
+			'Spain'
+		])
+	})
+})
+
+describe('excludePlayingCountries', () => {
+	test('should exclude the playing countries from the european countries list', () => {
+		const playingCountries = ['France', 'Spain']
+		const availableCountries = excludePlayingCountries(playingCountries)
+		expect(availableCountries.includes(playingCountries[0])).toBe(false)
+		expect(availableCountries.includes(playingCountries[1])).toBe(false)
 	})
 })

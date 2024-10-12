@@ -40,6 +40,12 @@ export const pickTwoCountries = (countries: string[]) => {
 	return [countries[firstIndex], countries[secondIndex]]
 }
 
+export const getGameCountries = (games: Game[]) =>
+	games.reduce((acc: string[], { teamA, teamB }) => [...acc, teamA, teamB], [])
+
+export const excludePlayingCountries = (playingCountries: string[]) =>
+	europeanCountries.filter((country) => !playingCountries.includes(country))
+
 export const analyzeGames = (games: Game[]) => {
 	const liveGames = games.reduce((acc: Game[], game: Game) => {
 		if (game.timeLeft > 0) {
@@ -57,7 +63,9 @@ export const analyzeGames = (games: Game[]) => {
 	}, [])
 
 	if (Math.random() > 0.9) {
-		const randomCountries = pickTwoCountries(europeanCountries)
+		const playingCountries = getGameCountries(games)
+		const availableCountries = excludePlayingCountries(playingCountries)
+		const randomCountries = pickTwoCountries(availableCountries)
 		const newGame = getNewGame(randomCountries)
 		liveGames.push(newGame)
 	}
