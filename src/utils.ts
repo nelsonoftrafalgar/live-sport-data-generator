@@ -1,4 +1,5 @@
-import { Game } from './types'
+import { Game, LiveGames } from './types'
+
 import { europeanCountries } from './countries'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -47,27 +48,28 @@ export const excludePlayingCountries = (playingCountries: string[]) =>
 	europeanCountries.filter((country) => !playingCountries.includes(country))
 
 export const analyzeGames = (games: Game[]) => {
-	const liveGames = games.reduce((acc: Game[], game: Game) => {
-		if (game.timeLeft > 0) {
-			return [
-				...acc,
-				{
+	const liveGames = games.reduce(
+		(acc: LiveGames, game: Game) => {
+			if (game.timeLeft > 0) {
+				acc.updatedGames.push({
 					...game,
 					result: updateResult(game.result),
 					timeLeft: game.timeLeft - 1
-				}
-			]
-		}
-
-		return acc
-	}, [])
+				})
+			} else {
+				acc.finishedGame = { ...game }
+			}
+			return acc
+		},
+		{ updatedGames: [], finishedGame: null }
+	)
 
 	if (Math.random() > 0.9) {
 		const playingCountries = getGameCountries(games)
 		const availableCountries = excludePlayingCountries(playingCountries)
 		const randomCountries = pickTwoCountries(availableCountries)
 		const newGame = getNewGame(randomCountries)
-		liveGames.push(newGame)
+		liveGames.updatedGames.push(newGame)
 	}
 
 	return liveGames

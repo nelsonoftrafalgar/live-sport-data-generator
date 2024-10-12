@@ -27,7 +27,7 @@ export const App = () => {
 
 	useEffect(() => {
 		const timeout = setTimeout(() => {
-			const updatedGames = analyzeGames(games)
+			const { updatedGames } = analyzeGames(games)
 			setGames(updatedGames)
 		}, 1000)
 

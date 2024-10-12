@@ -23,7 +23,7 @@ describe('analyzeGames', () => {
 			{ id: 'test-id', teamA: 'C', teamB: 'D', result: '2-2', timeLeft: 3 }
 		]
 
-		const [firstGame, lastGame] = analyzeGames(games)
+		const [firstGame, lastGame] = analyzeGames(games).updatedGames
 
 		expect(firstGame.timeLeft).toEqual(4)
 		expect(lastGame.timeLeft).toEqual(2)
@@ -46,7 +46,7 @@ describe('analyzeGames', () => {
 			{ id: 'test-id', teamA: 'C', teamB: 'D', result: '2-2', timeLeft: 0 }
 		]
 
-		const [firstGame, lastGame] = analyzeGames(games)
+		const [firstGame, lastGame] = analyzeGames(games).updatedGames
 
 		expect(firstGame).toBeDefined()
 		expect(lastGame).toBeUndefined()
@@ -91,7 +91,7 @@ describe('analyzeGames', () => {
 			.mockReturnValueOnce(1)
 			.mockReturnValueOnce(0.85)
 
-		const updatedGames = analyzeGames(games)
+		const { updatedGames } = analyzeGames(games)
 
 		expect(updatedGames).toEqual([
 			{
@@ -102,6 +102,28 @@ describe('analyzeGames', () => {
 				timeLeft: 4
 			}
 		])
+	})
+
+	test('should return finished game if timeLeft is 0', () => {
+		const games = [
+			{
+				id: 'test-id',
+				teamA: 'TeamA',
+				teamB: 'TeamB',
+				result: '1-0',
+				timeLeft: 0
+			}
+		]
+
+		const { finishedGame } = analyzeGames(games)
+
+		expect(finishedGame).toEqual({
+			id: 'test-id',
+			teamA: 'TeamA',
+			teamB: 'TeamB',
+			result: '1-0',
+			timeLeft: 0
+		})
 	})
 })
 

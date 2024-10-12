@@ -20,3 +20,8 @@ export interface GamesProps {
 export interface SummaryProps {
 	summary: Summary[]
 }
+
+export interface LiveGames {
+	updatedGames: Game[]
+	finishedGame: Game | null
+}
