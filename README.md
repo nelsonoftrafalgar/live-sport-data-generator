@@ -13,3 +13,5 @@ remove and return game after its time is over
 
 SUMMARY BOARD
 add summary item based on finished game
+if game total score (team A score + team B score) matches a total score of a game in summary it should be inserted before this game 
+if game total score (team A score + team B score) doesn't match a total score of a game in summary it should be appended to summary 

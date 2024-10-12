@@ -75,9 +75,18 @@ export const analyzeGames = (games: Game[]) => {
 	return liveGames
 }
 
+export const getGameTotalResult = (result: string) =>
+	result.split('-').reduce((acc, val) => acc + Number(val), 0)
+
 export const updateSummary = (finishedGame: Game) => (summary: Summary[]) => {
 	const { teamA, teamB, result, id } = finishedGame
 	const newItem = { id, teamA, teamB, result }
 
-	return [...summary, newItem]
+	const existingIdx = summary.findIndex(
+		(item) => getGameTotalResult(item.result) === getGameTotalResult(result)
+	)
+
+	return existingIdx === -1
+		? [...summary, newItem]
+		: [...summary.slice(0, existingIdx), newItem, ...summary.slice(existingIdx)]
 }

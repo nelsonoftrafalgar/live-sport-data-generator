@@ -3,6 +3,7 @@ import {
 	analyzeGames,
 	excludePlayingCountries,
 	getGameCountries,
+	getGameTotalResult,
 	getNewGame,
 	pickTwoCountries,
 	updateResult,
@@ -236,5 +237,66 @@ describe('updateSummary', () => {
 			teamB: 'TeamB',
 			result: '2-1'
 		})
+	})
+
+	test('should insert finished game in the correct position if matching scores exist', () => {
+		const finishedGame = {
+			id: 'test-id',
+			teamA: 'TeamC',
+			teamB: 'TeamD',
+			result: '2-3',
+			timeLeft: 0
+		}
+
+		const summary = [
+			{ id: 'test-id', teamA: 'TeamA', teamB: 'TeamB', result: '0-1' },
+			{ id: 'test-id', teamA: 'TeamE', teamB: 'TeamF', result: '3-2' }
+		]
+
+		const updatedSummary = updateSummary(finishedGame)(summary)
+
+		expect(updatedSummary).toHaveLength(3)
+		expect(updatedSummary[1]).toEqual({
+			id: 'test-id',
+			teamA: 'TeamC',
+			teamB: 'TeamD',
+			result: '2-3'
+		})
+		expect(updatedSummary[0]).toEqual(summary[0])
+	})
+
+	test('should append finished game if matching scores does not exist', () => {
+		const finishedGame = {
+			id: 'test-id',
+			teamA: 'TeamC',
+			teamB: 'TeamD',
+			result: '4-3',
+			timeLeft: 0
+		}
+
+		const summary = [
+			{ id: 'test-id', teamA: 'TeamA', teamB: 'TeamB', result: '0-1' },
+			{ id: 'test-id', teamA: 'TeamE', teamB: 'TeamF', result: '3-2' }
+		]
+
+		const updatedSummary = updateSummary(finishedGame)(summary)
+
+		expect(updatedSummary).toHaveLength(3)
+		expect(updatedSummary[2]).toEqual({
+			id: 'test-id',
+			teamA: 'TeamC',
+			teamB: 'TeamD',
+			result: '4-3'
+		})
+		expect(updatedSummary[0]).toEqual(summary[0])
+		expect(updatedSummary[1]).toEqual(summary[1])
+	})
+})
+
+describe('getGameTotalResult', () => {
+	test('should return the total result from the result key value', () => {
+		expect(getGameTotalResult('2-3')).toBe(5)
+		expect(getGameTotalResult('0-0')).toBe(0)
+		expect(getGameTotalResult('10-5')).toBe(15)
 	})
 })
