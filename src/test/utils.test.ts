@@ -1,5 +1,12 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { analyzeGames, getNewGame, updateResult } from '../App'
+import {
+	analyzeGames,
+	getNewGame,
+	pickTwoCountries,
+	updateResult
+} from '../utils'
+
+import { europeanCountries } from '../countries'
 
 describe('analyzeGames', () => {
 	test('should update time left for each game in progress', () => {
@@ -120,13 +127,24 @@ describe('updateResult', () => {
 
 describe('getNewGame', () => {
 	test('should return a new game with initial result set to 0-0', () => {
-		const newGame = getNewGame()
+		const newGame = getNewGame(['TeamA', 'TeamB'])
 
 		expect(newGame.result).toBe('0-0')
 	})
 	test('should return a new game with initial timeLeft set to 60', () => {
-		const newGame = getNewGame()
+		const newGame = getNewGame(['TeamA', 'TeamB'])
 
 		expect(newGame.timeLeft).toEqual(60)
+	})
+})
+
+describe('pickTwoCountries', () => {
+	test('should return an array of two different countries', () => {
+		const [firstCountry, secondCountry] = pickTwoCountries(europeanCountries)
+
+		expect(firstCountry).toBeDefined()
+		expect(secondCountry).toBeDefined()
+
+		expect(firstCountry).not.toEqual(secondCountry)
 	})
 })
